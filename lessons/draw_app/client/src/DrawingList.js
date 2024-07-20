@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { subscribeToDrawings } from './api';
 
-export default function DrawingList() {
+export default function DrawingList(props) {
   const [drawings, setDrawings] = useState([]);
 
   useEffect(() => {
@@ -14,6 +14,7 @@ export default function DrawingList() {
     <li
       className='DrawingList-item'
       key={drawing.id}
+      onClick={event => props.selectDrawing(drawing)}
     >{drawing.name}</li>
   ))
 
