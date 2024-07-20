@@ -22,6 +22,12 @@ function subscribeToDrawings(connection, client) {
     });
 };
 
+function handleLinePublish(connection, line) {
+  r.table('lines')
+  .insert(Object.assign(line, {timestamp: new Date()}))
+  .run(connection);
+};
+
 r.connect({
   host: 'localhost',
   port: 28015,
@@ -30,6 +36,7 @@ r.connect({
   io.on('connection', (client) => {
     client.on('createDrawing', ({ name }) => createDrawing(connection, name));
     client.on('subscribeToDrawings', () => subscribeToDrawings(connection, client));
+    client.on('publishLine', (line) => handleLinePublish(connection, line));
   });
 });
 
