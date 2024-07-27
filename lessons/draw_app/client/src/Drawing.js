@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Canvas from 'simple-react-canvas';
-import { publishLine } from "./api";
+import { publishLine, subscribeToDrawingLines } from "./api";
 
 export default function Drawing(props) {
+  const [lines, updateLines] = useState([]);
+
+  useEffect(() => {
+    subscribeToDrawingLines(props.drawing.id, (line) => updateLines([...lines, line]));
+  }, []);
+
   function handleDraw(line) {
     publishLine({
       drawingId: props.drawing.id,
@@ -16,7 +22,8 @@ export default function Drawing(props) {
         <div className="Drawing-title">{props.drawing.name}</div>
         <Canvas
           drawingEnabled={true}
-          onDraw={handleDraw} />
+          onDraw={handleDraw}
+          lines={lines} />
       </div>
     ) : null
   )
